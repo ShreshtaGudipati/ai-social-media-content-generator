@@ -1,0 +1,206 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ------------------- */
+/* BODY */
+/* ------------------- */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+/* ------------------- */
+/* PAGE LAYOUT */
+/* ------------------- */
+.page {
+  min-height: 100vh;
+  padding: 50px 20px;
+}
+
+.wrapper {
+  max-width: 1100px;
+  margin: auto;
+}
+
+/* ------------------- */
+/* HERO */
+/* ------------------- */
+.hero {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.hero h1 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  color: #64748b;
+  font-size: 17px;
+}
+
+/* ------------------- */
+/* PANEL */
+/* ------------------- */
+.panel {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 28px;
+  margin-bottom: 30px;
+}
+
+/* ------------------- */
+/* FORM GRID */
+/* ------------------- */
+.grid-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.field label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #475569;
+  font-weight: 600;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 15px;
+  background: white;
+}
+
+/* ------------------- */
+/* BUTTONS */
+/* ------------------- */
+.primary-btn,
+.actions button,
+.tabs button {
+  border: none;
+  background: #3b82f6;
+  color: white;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.primary-btn:hover,
+.actions button:hover,
+.tabs button:hover {
+  opacity: 0.92;
+}
+
+/* ------------------- */
+/* LOADER */
+/* ------------------- */
+.loader-wrap {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.loader {
+  width: 44px;
+  height: 44px;
+  border: 4px solid #dbeafe;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  margin: auto;
+  animation: spin 1s linear infinite;
+}
+
+.loader-wrap p {
+  margin-top: 12px;
+  color: #64748b;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ------------------- */
+/* TABS */
+/* ------------------- */
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* ------------------- */
+/* RESULT CARD */
+/* ------------------- */
+.result-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 28px;
+  min-height: 320px;
+  margin-bottom: 25px;
+}
+
+.result-card h2 {
+  font-size: 22px;
+  margin-bottom: 18px;
+  color: #3b82f6;
+}
+
+.result-card p {
+  white-space: pre-wrap;
+  line-height: 1.8;
+  color: #1e293b;
+}
+
+/* ------------------- */
+/* ACTIONS */
+/* ------------------- */
+.actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+/* ------------------- */
+/* MOBILE */
+/* ------------------- */
+@media (max-width: 900px) {
+  .grid-form {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .result-card {
+    min-height: auto;
+  }
+}
