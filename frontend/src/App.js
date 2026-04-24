@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./App.css";
+
 const API = process.env.REACT_APP_API_URL;
+
 function App() {
   const [topic, setTopic] = useState("");
   const [tone, setTone] = useState("Professional");
@@ -17,7 +19,7 @@ function App() {
     setResult(null);
 
     try {
-      const response = await axios.post("http://localhost:5000/generate", {
+      const response = await axios.post(`${API}/generate`, {
         topic,
         tone,
         audience,
@@ -25,28 +27,33 @@ function App() {
 
       setResult(response.data);
     } catch (error) {
-      alert("Backend not running.");
+      alert("Backend not connected.");
     }
 
     setLoading(false);
   };
 
   const downloadPDF = async () => {
-  const response = await axios.post(
-    "http://localhost:5000/download-pdf",
-    result,
-    { responseType: "blob" }
-  );
+    try {
+      const response = await axios.post(
+        `${API}/download-pdf`,
+        result,
+        { responseType: "blob" }
+      );
 
-  const url = window.URL.createObjectURL(new Blob([response.data]));
-  const link = document.createElement("a");
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
 
-  link.href = url;
-  link.setAttribute("download", "content_report.pdf");
+      link.href = url;
+      link.setAttribute("download", "content_report.pdf");
 
-  document.body.appendChild(link);
-  link.click();
-};
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      alert("PDF download failed.");
+    }
+  };
 
   const tabTitle = {
     instagram: "Instagram Caption",
@@ -57,7 +64,6 @@ function App() {
 
   return (
     <div className="page">
-
       <div className="wrapper">
 
         <header className="hero">
@@ -124,10 +130,21 @@ function App() {
         {result && !loading && (
           <>
             <section className="tabs">
-              <button onClick={() => setActiveTab("instagram")}>Instagram</button>
-              <button onClick={() => setActiveTab("linkedin")}>LinkedIn</button>
-              <button onClick={() => setActiveTab("article")}>Article</button>
-              <button onClick={() => setActiveTab("twitter")}>Twitter</button>
+              <button onClick={() => setActiveTab("instagram")}>
+                Instagram
+              </button>
+
+              <button onClick={() => setActiveTab("linkedin")}>
+                LinkedIn
+              </button>
+
+              <button onClick={() => setActiveTab("article")}>
+                Article
+              </button>
+
+              <button onClick={() => setActiveTab("twitter")}>
+                Twitter
+              </button>
             </section>
 
             <section className="result-card">
@@ -136,8 +153,13 @@ function App() {
             </section>
 
             <section className="actions">
-              <button onClick={() => setApproved(true)}>Approve</button>
-              <button onClick={generateContent}>Regenerate</button>
+              <button onClick={() => setApproved(true)}>
+                Approve
+              </button>
+
+              <button onClick={generateContent}>
+                Regenerate
+              </button>
 
               {approved && (
                 <button onClick={downloadPDF}>
