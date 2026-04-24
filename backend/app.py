@@ -2,18 +2,26 @@ from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from fpdf import FPDF
 import google.generativeai as genai
-import re
-import os
-import os
 from dotenv import load_dotenv
+import os
+import re
+
 # =====================================
 # APP
 # =====================================
 app = Flask(__name__)
 
+# Allow Localhost + Vercel Frontend
 CORS(
     app,
-    resources={r"/*": {"origins": "http://localhost:3000"}},
+    resources={
+        r"/*": {
+            "origins": [
+                "http://localhost:3000",
+                "https://ai-social-media-content-generator-ecru.vercel.app"
+            ]
+        }
+    },
     supports_credentials=True
 )
 
@@ -21,12 +29,12 @@ CORS(
 # API KEY
 # =====================================
 load_dotenv()
+
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 genai.configure(api_key=GEMINI_API_KEY)
 
 model = genai.GenerativeModel("models/gemma-3-4b-it")
-
 
 # =====================================
 # HELPERS
@@ -43,7 +51,6 @@ def clean_output(text):
     return text.strip()
 
 
-# PDF SAFE TEXT
 def pdf_safe(text):
     text = text.replace("’", "'")
     text = text.replace("‘", "'")
@@ -52,9 +59,7 @@ def pdf_safe(text):
     text = text.replace("–", "-")
     text = text.replace("—", "-")
     text = text.replace("…", "...")
-    
     return text.encode("latin-1", "ignore").decode("latin-1")
-
 
 # =====================================
 # AGENTS
@@ -104,16 +109,11 @@ def twitter_agent(topic, tone, audience):
     """
     return clean_output(ask_ai(prompt))
 
-
 # =====================================
 # GENERATE
 # =====================================
-@app.route("/generate", methods=["POST", "OPTIONS"])
+@app.route("/generate", methods=["POST"])
 def generate():
-
-    if request.method == "OPTIONS":
-        return jsonify({"status": "ok"}), 200
-
     data = request.get_json(force=True)
 
     topic = data.get("topic", "")
@@ -127,16 +127,11 @@ def generate():
         "twitter": twitter_agent(topic, tone, audience)
     })
 
-
 # =====================================
 # DOWNLOAD PDF
 # =====================================
-@app.route("/download-pdf", methods=["POST", "OPTIONS"])
+@app.route("/download-pdf", methods=["POST"])
 def download_pdf():
-
-    if request.method == "OPTIONS":
-        return jsonify({"status": "ok"}), 200
-
     data = request.get_json(force=True)
 
     pdf = FPDF()
@@ -168,9 +163,8 @@ def download_pdf():
         mimetype="application/pdf"
     )
 
-
 # =====================================
 # RUN
 # =====================================
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
