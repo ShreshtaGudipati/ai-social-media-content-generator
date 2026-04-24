@@ -4,7 +4,8 @@ from fpdf import FPDF
 import google.generativeai as genai
 import re
 import os
-
+import os
+from dotenv import load_dotenv
 # =====================================
 # APP
 # =====================================
@@ -19,7 +20,8 @@ CORS(
 # =====================================
 # API KEY
 # =====================================
-GEMINI_API_KEY = "AIzaSyCl0PWRgjr9uO6ecLePc5oqxaFAcnJZnc8"
+load_dotenv()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 genai.configure(api_key=GEMINI_API_KEY)
 
