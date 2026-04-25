@@ -2,37 +2,55 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./App.css";
 
-const API = process.env.REACT_APP_API_URL;
+/* =====================================
+   AUTO API URL
+   Local -> localhost backend
+   Deployed -> Railway backend from .env
+===================================== */
+const API =
+  process.env.REACT_APP_API_URL || "http://127.0.0.1:5000";
 
 function App() {
   const [topic, setTopic] = useState("");
   const [tone, setTone] = useState("Professional");
   const [audience, setAudience] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [approved, setApproved] = useState(false);
   const [result, setResult] = useState(null);
   const [activeTab, setActiveTab] = useState("instagram");
 
+  /* =====================================
+     GENERATE CONTENT
+  ===================================== */
   const generateContent = async () => {
-    setLoading(true);
-    setApproved(false);
-    setResult(null);
+  setLoading(true);
+  setApproved(false);
+  setResult(null);
 
-    try {
-      const response = await axios.post(`${API}/generate`, {
-        topic,
-        tone,
-        audience,
-      });
+  try {
+    const response = await axios.post(`${API}/generate`, {
+      topic,
+      tone,
+      audience,
+    });
 
-      setResult(response.data);
-    } catch (error) {
-      alert("Backend not connected.");
-    }
+    setResult(response.data);
 
-    setLoading(false);
-  };
+  } catch (error) {
+    console.log("ERROR:", error.response?.data || error.message);
 
+    alert(
+      error.response?.data?.error ||
+      "Backend request failed."
+    );
+  }
+
+  setLoading(false);
+};
+  /* =====================================
+     DOWNLOAD PDF
+  ===================================== */
   const downloadPDF = async () => {
     try {
       const response = await axios.post(
@@ -41,20 +59,26 @@ function App() {
         { responseType: "blob" }
       );
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
+      const fileURL = window.URL.createObjectURL(
+        new Blob([response.data])
+      );
 
-      link.href = url;
+      const link = document.createElement("a");
+      link.href = fileURL;
       link.setAttribute("download", "content_report.pdf");
 
       document.body.appendChild(link);
       link.click();
       link.remove();
     } catch (error) {
+      console.log(error);
       alert("PDF download failed.");
     }
   };
 
+  /* =====================================
+     TITLES
+  ===================================== */
   const tabTitle = {
     instagram: "Instagram Caption",
     linkedin: "LinkedIn Post",
@@ -66,15 +90,18 @@ function App() {
     <div className="page">
       <div className="wrapper">
 
+        {/* HEADER */}
         <header className="hero">
           <h1>Multi-Agent Social Media Content Generator</h1>
           <p>Generate Posts, Articles and Threads</p>
         </header>
 
+        {/* FORM */}
         <section className="panel">
 
           <div className="grid-form">
 
+            {/* TOPIC */}
             <div className="field">
               <label>Topic</label>
               <input
@@ -85,6 +112,7 @@ function App() {
               />
             </div>
 
+            {/* TONE */}
             <div className="field">
               <label>Tone</label>
               <select
@@ -98,6 +126,7 @@ function App() {
               </select>
             </div>
 
+            {/* AUDIENCE */}
             <div className="field">
               <label>Audience</label>
               <input
@@ -110,6 +139,7 @@ function App() {
 
           </div>
 
+          {/* BUTTON */}
           <button
             className="primary-btn"
             onClick={generateContent}
@@ -118,6 +148,7 @@ function App() {
             {loading ? "Generating..." : "Generate Content"}
           </button>
 
+          {/* LOADER */}
           {loading && (
             <div className="loader-wrap">
               <div className="loader"></div>
@@ -127,9 +158,12 @@ function App() {
 
         </section>
 
+        {/* RESULT */}
         {result && !loading && (
           <>
+            {/* TABS */}
             <section className="tabs">
+
               <button onClick={() => setActiveTab("instagram")}>
                 Instagram
               </button>
@@ -145,14 +179,18 @@ function App() {
               <button onClick={() => setActiveTab("twitter")}>
                 Twitter
               </button>
+
             </section>
 
+            {/* CONTENT */}
             <section className="result-card">
               <h2>{tabTitle[activeTab]}</h2>
               <p>{result[activeTab]}</p>
             </section>
 
+            {/* ACTIONS */}
             <section className="actions">
+
               <button onClick={() => setApproved(true)}>
                 Approve
               </button>
@@ -166,6 +204,7 @@ function App() {
                   Download PDF
                 </button>
               )}
+
             </section>
           </>
         )}
