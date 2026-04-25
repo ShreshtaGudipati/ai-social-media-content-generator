@@ -35,7 +35,10 @@ genai.configure(api_key=GEMINI_API_KEY)
 
 # KEEP GEMMA MODEL
 model = genai.GenerativeModel("models/gemma-3-4b-it")
-
+@app.route("/check-key")
+def check_key():
+    key = os.getenv("GEMINI_API_KEY", "")
+    return {"starts_with": key[:6], "length": len(key)}
 # =====================================
 # HELPERS
 # =====================================
