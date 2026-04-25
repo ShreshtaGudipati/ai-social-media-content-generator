@@ -15,14 +15,7 @@ app = Flask(__name__)
 # CORS
 CORS(
     app,
-    resources={
-        r"/*": {
-            "origins": [
-                "http://localhost:3000",
-                "https://ai-social-media-content-generator-ecru.vercel.app"
-            ]
-        }
-    }
+    resources={r"/*": {"origins": "*"}}
 )
 
 # =====================================
