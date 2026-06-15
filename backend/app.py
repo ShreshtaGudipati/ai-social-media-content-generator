@@ -39,6 +39,16 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 def check_key():
     key = os.getenv("GEMINI_API_KEY", "")
     return {"starts_with": key[:6], "length": len(key)}
+
+
+@app.route("/version")
+def version():
+    return {
+        "model": "gemini-1.5-flash",
+        "sdk": "google-generativeai",
+        "version": "v2"
+    }
+
 # =====================================
 # HELPERS
 # =====================================
