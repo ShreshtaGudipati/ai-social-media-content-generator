@@ -34,20 +34,35 @@ if not GEMINI_API_KEY:
 genai.configure(api_key=GEMINI_API_KEY)
 
 # KEEP GEMMA MODEL
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.5-flash")
+@app.route("/models")
+def models():
+    try:
+        models = []
+
+        for m in genai.list_models():
+            models.append(m.name)
+
+        return jsonify(models)
+
+    except Exception as e:
+        traceback.print_exc()
+        return {"error": str(e)}, 500
+
 @app.route("/check-key")
 def check_key():
     key = os.getenv("GEMINI_API_KEY", "")
     return {"starts_with": key[:6], "length": len(key)}
 
 
-@app.route("/version")
-def version():
-    return {
-        "model": "gemini-1.5-flash",
-        "sdk": "google-generativeai",
-        "version": "v2"
-    }
+@app.route("/test-model")
+def test_model():
+    try:
+        response = model.generate_content("Say hello in one sentence")
+        return {"response": response.text}
+    except Exception as e:
+        traceback.print_exc()
+        return {"error": str(e)}, 500
 
 # =====================================
 # HELPERS
