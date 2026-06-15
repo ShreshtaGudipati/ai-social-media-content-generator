@@ -34,7 +34,7 @@ if not GEMINI_API_KEY:
 genai.configure(api_key=GEMINI_API_KEY)
 
 # KEEP GEMMA MODEL
-model = genai.GenerativeModel("models/gemma-3-4b-it")
+model = genai.GenerativeModel("gemini-1.5-flash")
 @app.route("/check-key")
 def check_key():
     key = os.getenv("GEMINI_API_KEY", "")
